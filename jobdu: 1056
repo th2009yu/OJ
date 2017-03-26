@@ -1,0 +1,40 @@
+时间限制：1 秒内存限制：32 兆特殊判题：否提交：9012解决：5994
+题目描述：
+输入两个正整数，求其最大公约数。
+输入：
+测试数据有多组，每组输入两个正整数。
+输出：
+对于每组输入,请输出其最大公约数。
+样例输入：
+49 14
+样例输出：
+7
+来源：
+2011年哈尔滨工业大学计算机研究生机试真题
+
+#include <cstdio>
+
+int gcd(int a, int b){		//递归
+	if(b==0)
+		return a;
+	return gcd(b,a%b);
+}
+
+/* 非递归
+	int gcd(int a, int b){
+		while(b){
+			int tmp=a%b;
+			a=b;
+			b=tmp;
+		}
+		return a;
+	}
+*/
+
+int main(){
+	int a,b;
+	while(scanf("%d%d",&a,&b)!=EOF){
+		printf("%d\n",gcd(a,b));
+	}
+	return 0;
+}
