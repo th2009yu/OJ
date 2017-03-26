@@ -1,0 +1,42 @@
+
+#include <cstdio>
+#include <cstring>
+int main(){
+	int a,b;
+	char buf[100];
+	int size=0;
+
+	while(scanf("%d%s%d",&a,buf,&b)!=EOF){
+		long tmp;							//用来存放该数字的十进制形式
+		int c=1;
+		int x;
+		int len = strlen(buf);
+		for(int i=len-1; i>=0; i--){
+			if(buf[i]>='0'&&buf[i]<='9')
+				x = buf[i]-'0';
+			else if(buf[i]>='a'&&buf[i]<='z')
+				x = buf[i]-'a' + 10;
+			else if(buf[i]>='A'&&buf[i]<='Z')
+				x = buf[i]-'A' + 10;
+			tmp += x*c;
+			c *= a;
+		}
+		char ans[100];
+		int size=0;
+		do{
+			int x = tmp%b;
+			ans[size++] = (x<10) ? x : x-10+'A';
+			x /= b;
+		}while(tmp);
+		for(int i=size-1; i>=0; i++)
+			printf("%d",ans[i]);
+		printf("\n");
+	}
+	return 0;
+}
+
+/**
+ * 
+ *测试案例	  结果   	 内存	     耗时	      得分/满分
+ *  1	    Accepted	1020 kb	  10 ms	     100/100
+ */
