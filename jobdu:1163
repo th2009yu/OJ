@@ -1,0 +1,63 @@
+1 秒内存限制：32 兆特殊判题：否提交：13105解决：4577
+题目描述：
+输入一个整数n(2<=n<=10000)，要求输出所有从1到这个整数之间(不包括1和这个整数)个位为1的素数，如果没有则输出-1。
+输入：
+输入有多组数据。
+每组一行，输入n。
+输出：
+输出所有从1到这个整数之间(不包括1和这个整数)个位为1的素数(素数之间用空格隔开，最后一个素数后面没有空格)，如果没有则输出-1。
+样例输入：
+100
+样例输出：
+11 31 41 61 71
+来源：
+2008年北京航空航天大学计算机研究生机试真题
+
+
+
+
+
+
+
+#include <cstdio>
+#define MAXN 10005
+
+int prime[MAXN];        //保存筛选得到的素数
+int primeSize;          //保存素数的个数
+bool mark[MAXN];        //若mark[x]为true，则表明该数为非素数
+
+void Init(){            //素数筛选法
+    primeSize=0;
+    for(int i=0; i<MAXN; i++)
+        mark[i] = false;
+    for(int i=2; i<MAXN; i++){
+        if(mark[i]==true)
+            continue;
+        prime[primeSize++] = i;
+        for(int j=i*i; j<MAXN; j+=i)       //将该数的所有倍数标记为非素数
+            mark[j] = true;
+    }
+}
+
+int main(){
+    Init();
+    int n;
+    while(scanf("%d",&n)!=EOF){
+        bool first=false;			    
+        for(int i=0; i<primeSize && prime[i]<n ; i++){
+            if(prime[i]%10==1 ){				//个位数为1
+                if(first==false){
+                    printf("%d",prime[i]);
+                    first=true;
+                }
+                else
+                    printf(" %d",prime[i]);
+            }
+        }
+        if(first==true)
+            printf("\n");
+        else
+            printf("-1\n");
+    }
+    return 0;
+}
