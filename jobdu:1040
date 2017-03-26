@@ -1,0 +1,47 @@
+时间限制：1 秒内存限制：32 兆特殊判题：否提交：8536解决：3389
+题目描述：
+Output the k-th prime number.
+输入：
+k≤10000
+输出：
+The k-th prime number.
+样例输入：
+3
+7
+样例输出：
+5
+17
+来源：
+2008年上海交通大学计算机研究生机试真题
+
+
+#include <cstdio>
+#define MAXN 200000
+
+int prime[MAXN];
+int primeSize;
+bool mark[MAXN];
+
+void Init(){
+	for(int i=0; i<MAXN; i++)
+		mark[i]=false;
+	primeSize=0;
+	for(int i=2; i<MAXN; i++){
+		if(mark[i]==true)
+			continue;
+		prime[primeSize++] = i;
+		if(i>=1000)
+			continue;
+		for(int j=i*i; j<MAXN; j+=i)
+			mark[j]=true;
+	}
+}
+
+int main(){
+	Init();
+	int k;
+	while(~scanf("%d",&k)){
+		printf("%d\n",prime[k-1]);
+	}
+	return 0;
+}
