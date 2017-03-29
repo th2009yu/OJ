@@ -1,0 +1,93 @@
+题目1198：a+b
+时间限制：1 秒内存限制：32 兆特殊判题：否提交：10136解决：3564
+题目描述：
+实现一个加法器，使其能够输出a+b的值。
+输入：
+输入包括两个数a和b，其中a和b的位数不超过1000位。
+输出：
+可能有多组测试数据，对于每组数据，
+输出a+b的值。
+样例输入：
+2 6
+10000000000000000000 10000000000000000000000000000000
+样例输出：
+8
+10000000000010000000000000000000
+来源：
+2010年华中科技大学计算机研究生机试真题
+
+
+
+
+算法思想：用代码模拟加法的运算法则，按照从低位开始对各对应位相加并加上来自低位的进位从而获得本位的数值以及进位的规则进行运算。
+
+
+
+#include <cstdio>
+#include <cstring>
+
+struct bigInteger{
+    
+    int digit[1000];			//按四位数一个单位保存数值
+    int size;					//下一个未使用的数组单元
+    
+    void init(){
+        for(int i=0; i<1000; i++)
+            digit[i]=0;			//所有位清零
+        size = 0;				//下一个未使用的数组单元为0
+    }
+    
+    void set(char str[]){		//从字符串中提取整数
+        init();
+        int L = strlen(str);
+        for(int i=L-1,j=0,t=0,c=1; i>=0; i--){
+            t += (str[i]-'0')*c;
+            j++;
+            c *= 10;
+            if(j==4 || i==0){			//若已经连续转换四个字符或者已经到达了最后一个字符
+                digit[size++] = t;
+                t=0;
+                j=0;
+                c=1;
+            }
+        }
+    }
+    
+    void output(){
+        for(int i=size-1; i>=0; i--){
+            if(i != size-1)
+                printf("%04d",digit[i]);
+            else
+                printf("%d",digit[i]);			//若是最高位，则无需输出前导零
+        }
+        printf("\n");
+    }
+    
+    bigInteger operator + (const bigInteger &A) const {				//加法运算符
+        bigInteger ret;
+        ret.init();
+        int carry = 0; 			//进位，初始值为0
+        for(int i=0; i<A.size || i<size; i++){
+            int tmp = A.digit[i] + digit[i] + carry;			//计算两个整数当前位以及来自低位的进位和
+            carry = tmp/10000;			//计算该位的进位
+            tmp %= 10000;				//去除进位部分，取后四位
+            ret.digit[ret.size++] = tmp;
+        }
+        if(carry != 0)							//计算结束后若最高位有进位
+            ret.digit[ret.size++] = carry;		//保存该进位
+        return ret;
+    }
+}a,b,c;
+
+char str1[1002], str2[1002];
+
+int main(){
+    while(scanf("%s%s",str1,str2)!=EOF){
+        a.set(str1);
+        b.set(str2);
+        c = a+b;
+        c.output();
+    }
+    return 0;
+}
+
