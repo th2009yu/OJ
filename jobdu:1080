@@ -1,0 +1,163 @@
+题目1080：进制转换
+时间限制：1 秒内存限制：32 兆特殊判题：否提交：6749解决：1736
+题目描述：
+将M进制的数X转换为N进制的数输出。
+输入：
+输入的第一行包括两个整数：M和N(2<=M,N<=36)。
+下面的一行输入一个数X，X是M进制的数，现在要求你将M进制的数X转换成N进制的数输出。
+输出：
+输出X的N进制表示的数。
+样例输入：
+16 10
+F
+样例输出：
+15
+提示：
+输入时字母部分为大写，输出时为小写，并且有大数据。
+来源：
+2008年清华大学计算机研究生机试真题
+
+
+
+/**
+ *高精度整数问题
+ *涉及到
+ *1.高精度整数与普通整数相乘
+ *2.高精度整数之间相加
+ *3.高精度整数除以普通整数
+ *4.高精度整数对普通整数求模
+ */
+
+
+
+#include <cstdio>
+#include <cstring>
+#define maxDigit 100
+
+struct bigInteger{
+    int digit[maxDigit];
+    int size;
+    
+    void init(){
+        for(int i=0; i<maxDigit; i++)
+            digit[i] = 0;
+        size = 0;
+    }
+    
+    void set(int x){
+        init();
+        do{
+            digit[size++] = x % 10000;
+            x /= 10000;
+        }while(x);
+    }
+    
+    void output(){
+        for(int i=size-1; i>=0; i--){
+            if(i!=size-1)
+                printf("%04d",digit[i]);
+            else
+                printf("%d",digit[i]);
+        }
+        printf("\n");
+    }
+    
+    bigInteger operator * (int x) const {				//高精度整数与普通整数相乘
+        bigInteger ret;
+        ret.init();
+        int carry = 0 ;
+        for(int i=0; i<size; i++){
+            int tmp = digit[i]*x + carry;
+            carry = tmp/10000;
+            tmp %= 10000;
+            ret.digit[ret.size++] = tmp;
+        }
+        if(carry != 0)
+            ret.digit[ret.size++] = carry;
+        return ret;
+    }
+    
+    bigInteger operator + (const bigInteger &A) const {				//高精度整数之间相加
+        bigInteger ret;
+        ret.init();
+        int carry = 0;
+        for(int i=0; i<size||i<A.size; i++){
+            int tmp = digit[i] + A.digit[i] + carry;
+            carry = tmp/10000;
+            tmp %= 10000;
+            ret.digit[ret.size++] = tmp;
+        }
+        if(carry!=0)
+            ret.digit[ret.size++] = carry;
+        return ret;
+    }
+    
+    bigInteger operator / (int x) const {					//高精度整数除以普通整数
+        bigInteger ret;
+        ret.init();
+        int remainder = 0;		//余数
+        for(int i=size-1; i>=0; i--){			//从最高位至最低位依次完成计算
+            int t = (remainder*10000 + digit[i])/x;				//计算当前位数值加上高位剩余的余数的和对x求得的商
+            int r = (remainder*10000 + digit[i])%x;				//计算当前位数值加上高位剩余的余数的和对x求模后得的余数
+            ret.digit[i] = t;				//保存本位的值
+            remainder = r;					//保存至本位为止的余数
+        }
+        ret.size = 0;
+        for(int i=0; i<maxDigit; i++)
+            if(ret.digit[i]!=0)
+                ret.size = i;			//若存在非0位，确定最高的非0位，作为最高有效位
+        ret.size++;						//最高有效位的下一位，即为下一个不曾使用的digit数组但愿，确定为size值
+        return ret;
+    }
+    
+    int operator % (int x) const {						//高精度整数对普通整数求模
+        int remainder = 0;
+        for(int i=size-1; i>=0; i--){
+            int t = (remainder*10000 + digit[i])/x;
+            int r = (remainder*10000 + digit[i])%x;
+            remainder = r;
+        }
+        return remainder;
+    }
+}a,b,c;
+
+char str[10000];
+char ans[10000];
+
+int main(){
+    int m,n;
+    while(scanf("%d%d",&m,&n)!=EOF){
+        scanf("%s",str);
+        int L = strlen(str);
+        a.set(0);			//a初始值位0，用来保存转换成十进制的m进制数
+        b.set(1);			//b初始值位1，在m进制数向十进制转换过程中，依次代表每一位的权重
+        
+        for(int i=L-1; i>=0; i--){				//从低位至高位转换m进制数至相应的十进制数
+            int t;
+            if(str[i]>='0' && str[i]<='9')
+                t = str[i]-'0';
+            else
+                t = str[i] - 'A' + 10;
+            a = a + b*t;
+            b = b*m;
+        }
+        
+        int size=0;			//代表转换为n进制后的字符个数
+        do{					//对转换后的十进制数求其n进制值
+            int t = a%n;
+            if(t>=10) 
+                ans[size++] = t-10+'a';
+            else
+                ans[size++] = t + '0';
+            a = a/n;
+        }while(a.digit[0]!=0 || a.size!=1);				//当a不为0时循环
+        
+        for(int i=size-1; i>=0; i--)
+            printf("%c",ans[i]);
+        printf("\n");
+    }
+    return 0;
+}
+
+
+
