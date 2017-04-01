@@ -1,0 +1,56 @@
+题目1190：大整数排序
+时间限制：1 秒内存限制：32 兆特殊判题：否提交：4637解决：2083
+题目描述：
+对N个长度最长可达到1000的数进行排序。
+输入：
+输入第一行为一个整数N，(1<=N<=100)。
+接下来的N行每行有一个数，数的长度范围为1<=len<=1000。
+每个数都是一个正数，并且保证不包含前缀零。
+输出：
+可能有多组测试数据，对于每组数据，将给出的N个数从小到大进行排序，输出排序后的结果，每个数占一行。
+样例输入：
+3
+11111111111111111111111111111
+2222222222222222222222222222222222
+33333333
+样例输出：
+33333333
+11111111111111111111111111111
+2222222222222222222222222222222222
+来源：
+2006年华中科技大学计算机研究生机试真题
+
+
+
+
+
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+using namespace std;
+
+struct bigInteger{
+	char str[1010];
+	int len;
+}s[110];
+
+bool cmp(bigInteger a,bigInteger b){
+	if(a.len!=b.len)
+		return a.len<b.len;
+	else
+		return strcmp(a.str,b.str)<0;
+}
+
+int main(){
+	int n;
+	while(~scanf("%d",&n)){
+		for(int i=0; i<n; i++){
+			scanf("%s",s[i].str);
+			s[i].len = strlen(s[i].str);
+		}
+		sort(s,s+n,cmp);
+		for(int i=0; i<n; i++)
+			printf("%s\n",s[i].str);
+	}
+	return 0;
+}
