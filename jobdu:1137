@@ -1,0 +1,125 @@
+题目1137：浮点数加法
+时间限制：1 秒内存限制：32 兆特殊判题：否提交：3876解决：1033
+题目描述：
+求2个浮点数相加的和
+题目中输入输出中出现浮点数都有如下的形式：
+P1P2...Pi.Q1Q2...Qj
+对于整数部分，P1P2...Pi是一个非负整数
+对于小数部分，Qj不等于0
+输入：
+对于每组案例，第1行是测试数据的组数n，每组测试数据占2行，分别是两个加数。
+每组测试数据之间有一个空行，每行数据不超过100个字符
+输出：
+每组案例是n行，每组测试数据有一行输出是相应的和。
+输出保证一定是一个小数部分不为0的浮点数
+样例输入：
+2
+0.111111111111111111111111111111
+0.111111111111111111111111111111
+
+10000000.655555555555555555555555555555
+1.444444444444444444444444444445
+样例输出：
+0.222222222222222222222222222222
+10000002.1
+来源：
+2008年北京大学软件所计算机研究生机试真题
+
+
+
+
+#include <cstdio>
+#include <cstring>
+#define MAXN 1010
+
+struct bigInteger{
+	int p[MAXN];		//保存整数部分
+	int q[MAXN];		//保存小数部分
+	int p_size;
+	int q_size;
+
+	void init(){		//初始化
+		for(int i=0; i<MAXN; i++)
+			p[i] = q[i] = 0;
+		p_size = 0;
+		q_size = 0;
+	}
+
+	bigInteger set(char str[]){		//将输入的高精度整数进行处理
+		bigInteger ret;
+		ret.init();
+		int p;
+		int len = strlen(str);
+		for(p=0; str[p]!='.'; p++);		//将p定位到小数点符号.处
+
+		for(int i=p+1; i<=len-1; i++)		//小数部分正着放  12345 -> 12345
+			ret.q[ret.q_size++] = str[i] - '0';
+
+		for(int i=p-1; i>=0; i--)			//整数部分反着放  12345 -> 54321
+			ret.p[ret.p_size++] = str[i] - '0';
+		return ret;
+	}
+
+	bigInteger operator + (const bigInteger &A) const {
+		bigInteger ret;
+		ret.init();
+		int carry = 0;
+		int qlen = q_size > A.q_size ? q_size : A.q_size;
+		ret.q_size = qlen;
+		for(int i=qlen-1; i>=0; i--){			//小数部分相加
+			int tmp = q[i] + A.q[i] + carry;
+			ret.q[--qlen] = tmp%10;
+			carry = tmp/10;
+		}
+		int plen = p_size > A.p_size ? p_size : A.p_size;
+		for(int i=0; i<=plen-1; i++){			//整数部分相加
+			int tmp = p[i] + A.p[i] + carry;
+			ret.p[ret.p_size++] = tmp%10;
+			carry = tmp/10;
+		}
+		if(carry!=0)
+			ret.p[ret.p_size++] = carry;
+		return ret;
+	}
+
+	void output(){
+		int i = p_size-1;
+		while(p[i]==0 && i>-1)			//去除整数部分的前导零
+			i--;
+		if(i==-1)
+			printf("0");
+		else
+			while(i>-1)
+				printf("%d",p[i--]);
+
+		int j = q_size-1;
+		while(q[j]==0 && j>-1)			//去除小数部分的后面多余的零
+			j--;
+		if(j!=-1){
+			printf(".");
+			int k=0;
+			while(k<=j)
+				printf("%d",q[k++]);
+		}
+		printf("\n");
+	}
+}a,b,c;
+
+char str1[MAXN],str2[MAXN];
+
+int main(){
+	int n;
+	while(~scanf("%d",&n)){
+		while(n--){
+			scanf("%s%s",str1,str2);
+			a.init();
+			b.init();
+			c.init();
+			a = a.set(str1);
+			b = b.set(str2);
+			c = a+b;
+			c.output();
+		}
+	}
+	return 0;
+}
