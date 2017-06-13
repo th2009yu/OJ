@@ -1,2 +1,2 @@
-# ACM
+# OJ
 just for fun
