@@ -1,0 +1,76 @@
+[Medium]
+Given a 2d grid map of '1's (land) and '0's (water), count the number of islands.
+An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. 
+You may assume all four edges of the grid are all surrounded by water.
+
+Example 1:
+
+Input:
+11110
+11010
+11000
+00000
+
+Output: 1
+Example 2:
+
+Input:
+11000
+11000
+00100
+00011
+
+Output: 3
+-----------------------------------------------
+
+Solution One / Java :
+  Algrithm thought:
+     1.Looking for '1' in giving matrix. Once find '1', then numOfIsland ++. 
+       Meanwhile, check if there is also a '1' in the top, bottom, left or right of the ‘1’.
+       if exist, then change them to '0'.
+       why i doing this because the horizontally or vertically adjacent '1' is treated as the same island.
+       
+       (在给出的矩阵中寻找‘1’。一旦找到‘1’，则numOfIsland ++。与此同时查看该‘1’的上下左右是否也存在‘1’，如果存在，则将它们改为‘0’，
+       之所以这么做是因为水平或者垂直相邻的‘1’当作同一个岛屿。)
+
+  Specific code：
+
+    class Solution {
+        public int numIslands(char[][] grid) {
+            int numOfIslands = 0;
+            for(int i = 0; i < grid.length; i ++){
+                for(int j = 0; j < grid[0].length; j++){
+                    if(grid[i][j] == '1'){
+                        numOfIslands ++;
+                        // change any '1' connected to it to '0'
+                        changeToZero(grid,i,j);
+                    }
+                }
+            }
+            return numOfIslands;
+        }
+
+        public void changeToZero(char[][] grid, int i, int j) {
+            // determine when at the boundary
+            if (i<0 || j<0 || i>=grid.length || j>=grid[0].length || grid[i][j] == '0')
+                return;
+            grid[i][j] = '0';
+            changeToZero(grid, i-1, j);   // top
+            changeToZero(grid, i+1, j);   // bottom
+            changeToZero(grid, i, j-1);   // left
+            changeToZero(grid, i, j+1);   // right
+        }
+    }
+-------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
