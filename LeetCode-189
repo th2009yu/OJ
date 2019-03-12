@@ -1,0 +1,187 @@
+[Easy]
+189. Rotate Array
+
+Given an array, rotate the array to the right by k steps, where k is non-negative.
+
+Example 1:
+
+Input: [1,2,3,4,5,6,7] and k = 3
+Output: [5,6,7,1,2,3,4]
+Explanation:
+rotate 1 steps to the right: [7,1,2,3,4,5,6]
+rotate 2 steps to the right: [6,7,1,2,3,4,5]
+rotate 3 steps to the right: [5,6,7,1,2,3,4]
+Example 2:
+
+Input: [-1,-100,3,99] and k = 2
+Output: [3,99,-1,-100]
+Explanation: 
+rotate 1 steps to the right: [99,-1,-100,3]
+rotate 2 steps to the right: [3,99,-1,-100]
+Note:
+
+Try to come up as many solutions as you can, there are at least 3 different ways to solve this problem.
+Could you do it in-place with O(1) extra space?
+
+-------------------------------------------------------------------------
+
+Solution One：
+/**方法一： 时间复杂度：O(n+k), 空间复杂度：O(1)
+ * 最直接的方法，写一个方法专门处理将数组的转换；
+ * 然后调用k次该方法完成最后的转换；
+ * 注意数组边界；
+ **/
+
+class Solution {
+    public void rotate(int[] nums, int k) {
+        for(int i=0; i<k; i++){
+            move(nums);
+        }
+    }
+    
+    public void move(int[] nums) {
+        if(nums.length<=1){
+            return;
+        }
+        int temp;
+        temp = nums[0];
+        nums[0] = nums[nums.length-1];
+        for(int i=nums.length-1; i>1; i--) {
+            nums[i] = nums[i-1];
+        }
+        nums[1] = temp;
+    }
+} 
+
+
+/** Result：Success
+Runtime: 97 ms, faster than 17.02% of Java online submissions for Rotate Array.
+Memory Usage: 35 MB, less than 87.47% of Java online submissions for Rotate Array.
+**/
+
+-------------------------------------------------------------------------
+
+Solution Two：
+/**方法二： 时间复杂度：O(loop+nums.length), 空间复杂度：O(1)
+ * 针对第一个方法进行了改进，通过寻找规律，来减少k的循环次数。如k=0与k=nums.length循环的结果是一致的；
+ **/
+
+class Solution {
+    public void rotate(int[] nums, int k) {
+        if(nums.length<=1){
+            return;
+        }
+        int loop = k%nums.length;
+        for(int i=0; i<loop; i++){
+            move(nums);
+        }
+    }
+    
+    public void move(int[] nums) {
+        int temp;
+        temp = nums[0];
+        nums[0] = nums[nums.length-1];
+        for(int i=nums.length-1; i>1; i--) {
+            nums[i] = nums[i-1];
+        }
+        nums[1] = temp;
+    }
+}
+
+/** Result：Success
+Runtime: 88 ms, faster than 19.97% of Java online submissions for Rotate Array.
+Memory Usage: 35 MB, less than 87.47% of Java online submissions for Rotate Array.
+**/
+
+
+-------------------------------------------------------------------------
+
+Solution Three：
+/**方法三： 时间复杂度：O(n), 空间复杂度：O(n)
+ * 用临时数组保存需要迁移的数组元素
+ **/
+
+class Solution {
+    public void rotate(int[] nums, int k) {
+        int len = nums.length;
+        int temp[] = new int[len];
+        System.arraycopy(nums, 0, temp, 0, len);
+        int loop = k%nums.length;
+        if(len<=1){
+            return;
+        }
+        if(loop == 0){
+            return;
+        }
+        for(int i=0; i<loop; i++){
+            nums[loop-1-i] = temp[len-1-i];
+        }
+        for(int i=0; i<len-loop; i++){
+            nums[loop+i] = temp[i];
+        }
+    }
+} 
+
+/** Result：Success
+Runtime: 0 ms, faster than 100.00% of Java online submissions for Rotate Array.
+Memory Usage: 35.4 MB, less than 76.60% of Java online submissions for Rotate Array.
+**/
+
+
+-------------------------------------------------------------------------
+
+Solution Four：
+
+/**方法四： 时间复杂度：O(n), 空间复杂度：O(n)
+ * 改进法三
+ **/
+
+class Solution {
+    public void rotate(int[] nums, int k) {
+        int a[] = new int[nums.length];
+        for(int i=0; i<nums.length; i++) {
+            a[(i+k)%nums.length] = nums[i];
+        }
+        System.arraycopy(a, 0, nums, 0, nums.length);
+    }
+} 
+
+/** Result：Success
+Runtime: 0 ms, faster than 100.00% of Java online submissions for Rotate Array.
+Memory Usage: 35.6 MB, less than 73.40% of Java online submissions for Rotate Array.
+**/
+
+
+-------------------------------------------------------------------------
+
+Solution Five：
+/**方法五： 时间复杂度：O(n), 空间复杂度：O(1)
+ * 1. 先反转整个数组
+ * 2. 反转前k个元素
+ * 3. 反转后n-k个元素
+ **/
+
+// best solution
+class Solution {
+    public void rotate(int[] nums, int k) {
+        k = k%nums.length;
+        reverse(nums, 0, nums.length-1);
+        reverse(nums, 0, k-1);
+        reverse(nums, k, nums.length-1);
+    }
+    public void reverse(int[] nums, int start, int end) {
+        while(start <= end) {
+            int tmp = nums[start];
+            nums[start] = nums[end];
+            nums[end] = tmp;
+            start ++;
+            end --;
+        }
+    }
+} 
+
+/** Result：Success
+Runtime: 0 ms, faster than 100.00% of Java online submissions for Rotate Array.
+Memory Usage: 35.5 MB, less than 74.47% of Java online submissions for Rotate Array.
+**/
+
