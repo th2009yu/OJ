@@ -1,0 +1,55 @@
+[Easy]
+176. Second Highest Salary
+
+Write a SQL query to get the second highest salary from the Employee table.
+
++----+--------+
+| Id | Salary |
++----+--------+
+| 1  | 100    |
+| 2  | 200    |
+| 3  | 300    |
++----+--------+
+For example, given the above Employee table, the query should return 200 as the second highest salary. 
+If there is no second highest salary, then the query should return null.
+
++---------------------+
+| SecondHighestSalary |
++---------------------+
+| 200                 |
++---------------------+
+
+
+
+------------------------------------------------------------------------------------------------------------------------------
+Solution One：
+
+# Write your MySQL query statement below
+
+select
+(
+    select distinct Salary
+    from Employee
+    order by Salary desc
+    limit 1 offset 1
+) as SecondHighestSalary;
+
+------------------------------------------------------------------------------------------------------------------------------
+Solution Two：
+
+# MySQL IFNULL函数是MySQL控制流函数之一，它接受两个参数，如果不是NULL，则返回第一个参数。 否则，IFNULL函数返回第二个参数。
+# 两个参数可以是文字值或表达式。
+# IFNULL(expression_1,expression_2);
+# 如果expression_1不为NULL，则IFNULL函数返回expression_1; 否则返回expression_2的结果。
+# IFNULL函数根据使用的上下文返回字符串或数字。
+
+select ifnull
+(
+    (select distinct Salary
+    from Employee
+    order by Salary desc
+    limit 1 offset 1),
+    NULL
+) as SecondHighestSalary;
+
+
