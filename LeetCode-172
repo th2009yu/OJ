@@ -1,0 +1,63 @@
+[Easy]
+172. Factorial Trailing Zeroes
+
+Given an integer n, return the number of trailing zeroes in n!.
+
+Example 1:
+
+Input: 3
+Output: 0
+Explanation: 3! = 6, no trailing zero.
+Example 2:
+
+Input: 5
+Output: 1
+Explanation: 5! = 120, one trailing zero.
+Note: Your solution should be in logarithmic time complexity.
+
+
+----------------------------------------------------------------------------------------
+
+Solution One:
+/** 方法一：递归法
+ *  1. 分析：所有的尾随零都来自2*5=10，有几个2*5，就有几个尾随零；
+ *  2. 所以问题变为：给定一个数的阶乘，因式分解，求有几个2*5；
+ *  3. 进一步简化：因为因式分解中，2的个数远远大于5，所以问题简化为，因式分解后有几个5；
+ *  4. 如：20！中有5、10、15、20，有20/5=4个5，即尾随零的个数有n/5个。
+ *  5. 又因为，25!结果不只是25/5=5个0，25结果有6个0,因为25=5*5，有两个5。所以结果f(n)=n/5+f(n/5)
+ **/
+
+class Solution {
+    public int trailingZeroes(int n) {
+        if(n < 5)
+            return 0;
+        return n/5 + trailingZeroes(n/5);
+    }
+}
+
+
+----------------------------------------------------------------------------------------
+
+Solution Two:
+/** 方法一：非递归法
+ *  1. 分析：所有的尾随零都来自2*5=10，有几个2*5，就有几个尾随零；
+ *  2. 所以问题变为：给定一个数的阶乘，因式分解，求有几个2*5；
+ *  3. 进一步简化：因为因式分解中，2的个数远远大于5，所以问题简化为，因式分解后有几个5；
+ *  4. 如：20！中有5、10、15、20，有20/5=4个5，即尾随零的个数有n/5个。
+ *  5. 又因为，25!结果不只是25/5=5个0，25结果有6个0,因为25=5*5，有两个5。所以结果f(n)=n/5+f(n/5)
+ **/
+
+class Solution {
+    public int trailingZeroes(int n) {
+        int count = 0;
+        while(n>4) {
+            count += n/5;
+            n /= 5;
+        }
+        return count;
+    }
+}
+
+
+
+
