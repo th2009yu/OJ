@@ -1,0 +1,70 @@
+[Easy]
+167. Two Sum II - Input array is sorted
+
+Given an array of integers that is already sorted in ascending order, find two numbers such that they add up to a specific target number.
+
+The function twoSum should return indices of the two numbers such that they add up to the target, where index1 must be less than index2.
+
+Note:
+
+Your returned answers (both index1 and index2) are not zero-based.
+You may assume that each input would have exactly one solution and you may not use the same element twice.
+Example:
+
+Input: numbers = [2,7,11,15], target = 9
+Output: [1,2]
+Explanation: The sum of 2 and 7 is 9. Therefore index1 = 1, index2 = 2.
+
+
+----------------------------------------------------------------------------------------------------
+Solution One:
+/** 方法一：
+ *  HashMap方法
+ **/
+class Solution {
+    public int[] twoSum(int[] numbers, int target) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int i=0; i<numbers.length; i++) {
+            int m = target - numbers[i];
+            if(map.containsKey(m)) {
+                return new int[] {map.get(m)+1, i+1};
+            } else {
+                map.put(numbers[i], i);
+            }
+        }
+        return new int[] {-1,-1};
+    }
+}
+
+/** Result: Success
+Runtime: 1 ms, faster than 52.81% of Java online submissions for Two Sum II - Input array is sorted.
+Memory Usage: 35.7 MB, less than 92.57% of Java online submissions for Two Sum II - Input array is sorted.
+**/
+
+
+
+----------------------------------------------------------------------------------------------------
+Solution Two:
+
+/** 方法二：
+ *  双指针方法
+ **/
+class Solution {
+    public int[] twoSum(int[] numbers, int target) {
+        int l = 0, r = numbers.length-1;
+        while(numbers[l]  + numbers[r] != target) {
+            if(numbers[l]  + numbers[r] > target)
+                r --;
+            else 
+                l++;
+        }
+        return new int[] {l+1, r+1};
+    }
+}
+
+/** Result: Success
+Runtime: 0 ms, faster than 100.00% of Java online submissions for Two Sum II - Input array is sorted.
+Memory Usage: 35.8 MB, less than 82.75% of Java online submissions for Two Sum II - Input array is sorted.
+**/
+
+
