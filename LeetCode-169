@@ -1,0 +1,145 @@
+[Easy]
+169. Majority Element
+
+Given an array of size n, find the majority element. The majority element is the element that appears more than ⌊ n/2 ⌋ times.
+
+You may assume that the array is non-empty and the majority element always exist in the array.
+
+Example 1:
+
+Input: [3,2,3]
+Output: 3
+Example 2:
+
+Input: [2,2,1,1,1,2,2]
+Output: 2
+
+
+------------------------------------------------------------------------------------------------
+
+Solution One:
+/** 方法一：
+ *  分析：1.所求的Majority element在一半数组中必然已经出现；
+ *  2. 在统计个数时，如果到数组的一半时，个数仍为0，则pass；
+ **/
+
+class Solution {
+    public int majorityElement(int[] nums) {
+        int mid = (nums.length+1)/2;
+        for(int i=0; i<mid; i++) {
+            if(major(nums, nums[i])){
+                return nums[i];
+            }
+        }
+        return nums[0];
+    }
+    public boolean major(int[] nums, int n) {
+        int count = 0;
+        int mid = (nums.length+1)/2;
+        for(int i=0; i<nums.length; i++) {
+            if(nums[i] == n){
+                count ++;
+            }
+            if(i == mid & count == 0)
+                return false;
+        }
+        if(count >= (nums.length/2 + 1))
+            return true;
+        else
+            return false;
+    }
+}
+
+/**Result: Success
+Runtime: 2400 ms, faster than 5.07% of Java online submissions for Majority Element.
+Memory Usage: 41.3 MB, less than 28.43% of Java online submissions for Majority Element.
+ **/
+
+
+
+------------------------------------------------------------------------------------------------
+
+Solution Two:
+/** 方法二：
+ *  利用HashMap统计数组元素出现的个数
+ **/
+
+class Solution {
+    public int majorityElement(int[] nums) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int count = 0;
+        for(int i=0; i< nums.length; i++) {
+            if(map.containsKey(nums[i])) {
+                count = map.get(nums[i]);
+                count ++;
+                if(count >= (nums.length/2 + 1))
+                    return nums[i];
+                map.put(nums[i], count);
+            } else {
+                map.put(nums[i], 1);
+            }
+        }
+        return nums[0];
+    }
+}
+
+/**Result: Success
+Runtime: 14 ms, faster than 37.42% of Java online submissions for Majority Element.
+Memory Usage: 42.6 MB, less than 26.69% of Java online submissions for Majority Element.
+ **/
+
+
+------------------------------------------------------------------------------------------------
+
+Solution Three:
+/** 方法三：
+ *  1. 先将数组排序；
+ *  2. 因为majority element的个数大于 nums.length/2,所以数组中间的元素必定是majority element
+ **/
+
+class Solution {
+    public int majorityElement(int[] nums) {
+        Arrays.sort(nums);
+        int mid = (nums.length + 1) / 2 - 1;
+        return nums[mid];
+    }
+}
+
+/**Result: Success
+Runtime: 3 ms, faster than 99.14% of Java online submissions for Majority Element.
+Memory Usage: 41.1 MB, less than 30.86% of Java online submissions for Majority Element.
+ **/
+
+
+------------------------------------------------------------------------------------------------
+
+Solution Four:
+/** 方法四：
+ *  如果将多数元素的实例计数为+1，而将任何其他元素的实例计数为-1，
+ *  那么将它们相加就可以明显地看出多数元素确实是多数元素。
+ **/
+class Solution {
+    public int majorityElement(int[] nums) {
+        int count = 0;
+        int candidate = 0;
+        for(int num: nums) {
+            if (count == 0)
+                candidate = num;
+            count += candidate == num ? 1 : -1;
+        }
+        return candidate;
+    }
+}
+
+/**Result: Success
+Runtime: 3 ms, faster than 99.14% of Java online submissions for Majority Element.
+Memory Usage: 41.3 MB, less than 28.43% of Java online submissions for Majority Element.
+ **/
+
+
+
+
+
+
+
+
