@@ -1,0 +1,66 @@
+[Easy]
+171. Excel Sheet Column Number
+
+Given a column title as appear in an Excel sheet, return its corresponding column number.
+
+For example:
+
+    A -> 1
+    B -> 2
+    C -> 3
+    ...
+    Z -> 26
+    AA -> 27
+    AB -> 28 
+    ...
+Example 1:
+
+Input: "A"
+Output: 1
+Example 2:
+
+Input: "AB"
+Output: 28
+Example 3:
+
+Input: "ZY"
+Output: 701
+
+
+--------------------------------------------------------------------------------------------------
+
+Solution One:
+/** 方法一：
+ * 本质上就是10进制与26进制的区别
+ **/
+
+class Solution {
+    public int titleToNumber(String s) {
+        int result = 0;
+        for(int i=0; i<s.length(); i++) {
+            result =  result*26 + (s.charAt(i) - 'A' + 1);
+        }
+        return result;
+    }
+}
+
+--------------------------------------------------------------------------------------------------
+
+Solution Two:
+/** 方法二：
+ *  改写方法一
+ **/
+class Solution {
+    public int titleToNumber(String s) {
+        int result = 0;
+        int m = 1;
+        for(int i=s.length()-1; i>=0; i--) {
+            int ascii = (s.charAt(i) - 'A' + 1);
+            result += ascii*m;
+            m *= 26;
+        }
+        return result;
+    }
+}
+
+
