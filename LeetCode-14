@@ -1,0 +1,100 @@
+[Easy]
+14. Longest Common Prefix
+
+Write a function to find the longest common prefix string amongst an array of strings.
+
+If there is no common prefix, return an empty string "".
+
+Example 1:
+
+Input: ["flower","flow","flight"]
+Output: "fl"
+Example 2:
+
+Input: ["dog","racecar","car"]
+Output: ""
+Explanation: There is no common prefix among the input strings.
+Note:
+
+All given inputs are in lowercase letters a-z.
+
+
+
+----------------------------------------------------------------------------------------------------------------------
+Solution One:
+// 方法一：时间复杂度O(S), 空间复杂度O(1) S为数组中所有字符串中的字符总数
+// 直接遍历;
+// 以第一个元素为基点，将数组中的每个元素与之比对前缀。
+
+class Solution {
+    public String longestCommonPrefix(String[] strs) {
+        if(strs.length <= 0)
+            return "";
+        String base = strs[0];
+        int min = base.length();
+        for(int i=1; i<strs.length; i++) {
+           if(comparePrefix(base, strs[i]) <= min){
+               min = comparePrefix(base, strs[i]);
+           }
+        }
+        return base.substring(0, min);
+    }
+    public int comparePrefix(String base, String n) {
+        if(base.length() <= n.length()){
+            for(int i=0; i<base.length(); i++) {
+                if(n.charAt(i) != base.charAt(i)){
+                    return i;
+                }
+                if(i == base.length()-1)
+                    return base.length();
+            }
+        } else {
+            for(int i=0; i<n.length(); i++) {
+                if(n.charAt(i) != base.charAt(i)){
+                    return i;
+                }
+                if(i == n.length()-1)
+                    return n.length();
+            }
+        }
+        return 0;
+    }
+}
+
+/**Result: Success
+Runtime: 4 ms, faster than 94.90% of Java online submissions for Longest Common Prefix.
+Memory Usage: 38.1 MB, less than 29.92% of Java online submissions for Longest Common Prefix.
+**/
+
+
+----------------------------------------------------------------------------------------------------------------------
+Solution Two:
+// 方法二：时间复杂度O(S), 空间复杂度O(1) S为数组中所有字符串中的字符总数
+// 先第一个、第二个元素相比，得到的prefix与第三个元素相比，得到的prefix再与第四个元素...依次类推
+// 运用了字符串的indexOf方法来判别前缀
+
+class Solution {
+    public String longestCommonPrefix(String[] strs) {
+        if(strs.length <= 0 || strs == null)
+            return "";
+        String prefix = strs[0];
+        for(int i=1; i<strs.length; i++) {
+            while(strs[i].indexOf(prefix) != 0) {
+                // 依次减少prefix末尾一个字符，再进行比对，直到有共同前缀为止
+                prefix = prefix.substring(0, prefix.length()-1);
+            }
+        }
+        return prefix;
+    }
+}
+
+/**Result: Success
+Runtime: 4 ms, faster than 94.70% of Java online submissions for Longest Common Prefix.
+Memory Usage: 38.6 MB, less than 23.90% of Java online submissions for Longest Common Prefix.
+**/
+
+
+
+
+
+
