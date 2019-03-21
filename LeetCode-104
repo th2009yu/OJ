@@ -1,0 +1,121 @@
+[Easy]
+104. Maximum Depth of Binary Tree
+
+Given a binary tree, find its maximum depth.
+
+The maximum depth is the number of nodes along the longest path from the root node down to the farthest leaf node.
+
+Note: A leaf is a node with no children.
+
+Example:
+
+Given binary tree [3,9,20,null,null,15,7],
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+return its depth = 3.
+
+
+
+=======================================================================================================
+// Solution One
+// Recursion
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public int maxDepth(TreeNode root) {
+        if (root == null)   return 0;
+        return 1 + Math.max(maxDepth(root.left), maxDepth(root.right));
+    }
+}
+
+
+=======================================================================================================
+
+
+// Solution Two
+// DFS, use two stack, one use to save treenode, another save depth
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public int maxDepth(TreeNode root) {
+        if(root == null)    return 0;
+        Stack<TreeNode> s = new Stack<>();
+        Stack<Integer> d = new Stack<>();
+        s.push(root);
+        d.push(1);
+        int max = 0;
+        while(!s.empty()) {
+            TreeNode t = s.pop();
+            int depth = d.pop();
+            max = Math.max(max, depth);
+            if(t.right != null) {
+                s.push(t.right);
+                d.push(depth+1);
+            }
+            if(t.left != null){
+                s.push(t.left);
+                d.push(depth+1);
+            }
+        }
+        return max;
+    }
+}
+
+
+=======================================================================================================
+
+
+
+// Solution Two
+// BFS, use two Queue, one use to save treenode, another save depth
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public int maxDepth(TreeNode root) {
+        if (root == null)   return 0;
+        Queue<TreeNode> q = new LinkedList<>();
+        Queue<Integer> d = new LinkedList<>();
+        int max = 0;
+        q.offer(root);
+        d.offer(1);
+        while (!q.isEmpty()) {
+            TreeNode t = q.poll();
+            int depth = d.poll();
+            max = Math.max(max, depth);
+            if (t.left != null) {
+                q.offer(t.left);
+                d.offer(depth + 1);
+            }
+            if (t.right != null) {
+                q.offer(t.right);
+                d.offer(depth + 1);
+            }
+        }
+        return max;
+    }
+}
