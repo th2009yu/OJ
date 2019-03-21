@@ -1,0 +1,53 @@
+[Easy]
+108. Convert Sorted Array to Binary Search Tree
+
+Given an array where elements are sorted in ascending order, convert it to a height balanced BST.
+
+For this problem, a height-balanced binary tree is defined as a binary tree in 
+which the depth of the two subtrees of every node never differ by more than 1.
+
+Example:
+
+Given the sorted array: [-10,-3,0,5,9],
+
+One possible answer is: [0,-3,9,-10,null,5], which represents the following height balanced BST:
+
+      0
+     / \
+   -3   9
+   /   /
+ -10  5
+ 
+ 
+ =================================================================================================================
+ 
+// Solution One:
+// Recursion
+// 每次找到排序数组的中点，中点左边的子数组构成左子数，中点右边的子数组构成右子树
+// 由于每次都基本上做到了二分，所以每次的左子树和右子树的节点数量是均衡的，所以最后得到的树是均衡的
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public TreeNode sortedArrayToBST(int[] nums) {
+        if (nums.length == 0)   return null;
+        TreeNode head = build(nums, 0, nums.length - 1);
+        return head;
+    }
+    
+    public TreeNode build(int[] nums, int low, int high) {
+        if (low > high) return null;
+        int mid = low + (high - low) / 2;
+        TreeNode node = new TreeNode(nums[mid]);
+        node.left = build(nums, low, mid - 1);
+        node.right = build(nums, mid + 1, high);
+        return node;
+    }
+}
