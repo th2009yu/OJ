@@ -1,0 +1,103 @@
+[Easy]
+110. Balanced Binary Tree
+
+Given a binary tree, determine if it is height-balanced.
+
+For this problem, a height-balanced binary tree is defined as:
+
+a binary tree in which the depth of the two subtrees of every node never differ by more than 1.
+
+Example 1:
+
+Given the following tree [3,9,20,null,null,15,7]:
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+Return true.
+
+Example 2:
+
+Given the following tree [1,2,2,3,3,null,null,4,4]:
+
+       1
+      / \
+     2   2
+    / \
+   3   3
+  / \
+ 4   4
+Return false.
+
+
+=======================================================================================================================
+
+// Solution One:
+// Recursion, let 'depth' function to calculate the tree depth, then compare the left and right tree.
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public boolean isBalanced(TreeNode root) {
+        if (root == null)   return true;
+        int left = depth(root.left);
+        int right = depth(root.right);
+        if (Math.abs(left - right) > 1) return false;
+        return isBalanced(root.left) && isBalanced(root.right);
+    }
+    
+    public int depth(TreeNode root) {
+        if (root == null)   return 0;
+        return 1 + Math.max(depth(root.left), depth(root.right));
+    }
+}
+
+
+
+=======================================================================================================================
+
+
+// Solution Two:
+// 一般BST的问题，首先往divide & conquer的思路去想
+// 一棵二叉树是不是平衡二叉树 => 左子树是不是平衡二叉树？右子树是不是平衡二叉树？
+// 如果任意一颗子树不平衡，整个树肯定不平衡
+// 如果左右子树都是平衡的，但左右子树相差高度大于1，此刻这课树又是不平衡的
+// 问题转化为分别对左右子树求maxDepth，平衡就返回最大深度，不平衡就返回-1
+// 技巧：用-1表示它不是一颗平衡二叉树
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public boolean isBalanced(TreeNode root) {
+        return dfsHeight(root) != -1;
+    }
+    
+    public int dfsHeight(TreeNode node) {
+        if (node == null)   return 0;
+        int leftHeight = dfsHeight(node.left);
+        int rightHeight = dfsHeight(node.right);
+        if (Math.abs(leftHeight - rightHeight) > 1) return -1;
+        if (leftHeight == -1)   return -1;
+        if (rightHeight == -1)  return -1;
+        return 1 + Math.max(leftHeight, rightHeight);
+    }
+}
+
+
+
