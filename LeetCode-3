@@ -1,0 +1,143 @@
+[Medium]
+3. Longest Substring Without Repeating Characters
+
+Given a string, find the length of the longest substring without repeating characters.
+
+Example 1:
+
+Input: "abcabcbb"
+Output: 3 
+Explanation: The answer is "abc", with the length of 3. 
+Example 2:
+
+Input: "bbbbb"
+Output: 1
+Explanation: The answer is "b", with the length of 1.
+Example 3:
+
+Input: "pwwkew"
+Output: 3
+Explanation: The answer is "wke", with the length of 3. 
+             Note that the answer must be a substring, "pwke" is a subsequence and not a substring.
+             
+             
+
+=======================================================================================================================
+// Solution One: Time complexity:O(n^3), Space complexity:O(n)
+// Brute Force
+
+// didn't pass
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        int n = s.length();
+        int ans = 0;
+        for (int i = 0; i < n; i ++) {
+            for (int j = i + 1; j <= n; j ++) {
+                if (allUnique(s, i, j))
+                    ans = Math.max(ans, j - i);
+            }
+        }
+        return ans;
+    }
+    
+    // 判断一个字符串是否存在重复字符， 用Set！
+    public boolean allUnique(String s, int start, int end) {
+        Set<Character> set = new HashSet<>();
+        for (int i = start; i < end; i ++) {
+            Character ch = s.charAt(i);
+            if (set.contains(ch))   return false;
+            set.add(ch);
+        }
+        return true;
+    }
+}
+
+
+
+=======================================================================================================================
+// Solution Two: Time complexity:O(), Space complexity:O()
+// Slide Window, 通常用于数组/字符串的问题中！！
+// 1.使用HashSet来存储现有window中的字符们；
+// 2.将右窗口往右移，判断新增的字符是否已存在；若不存在，则右窗口继续扩大。
+// 3.若存在，左窗口从0下标开始往有移，重复1.2.操作，直至遍历完字符串。
+
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        int n = s.length();
+        Set<Character> set = new HashSet<>();
+        int ans = 0, i = 0, j = 0;
+        while(i < n && j < n) {
+            if (!set.contains(s.charAt(j))) {
+                set.add(s.charAt(j++));
+                ans = Math.max(ans, j - i);
+            } else {
+                set.remove(s.charAt(i++));
+            }
+        }
+        return ans;
+    }    
+}
+
+
+
+=======================================================================================================================
+
+// Solution Three: Time complexity:O(n), Space complexity:O(n)
+// Sliding Window Optimized，对方法二的改进
+// 在方法二中存在这样的情况："abcb...",当窗口定格在下标范围为0～2时，右窗口下标到达3，发现在Set中存在，于是左窗口往右移，窗口范围变为1～3，
+// Set中仍然存在两个b。所以改进方案：直接将左窗口下标右移到重复的字符右边。
+// 用HashMap替代Set，因为HashMap中可以存储元素以及对应的下标位置。
+// 所以在右窗口的下标所在元素重复时，直接查询该元素在HashMap中的下标i，然后将左窗口直接设为i+1
+
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        int ans = 0, i = 0, j = 0;
+        int n = s.length();
+        while (i < n && j < n) {
+            // 若右窗口下标所在的元素已存在，则将HashMap中重复的元素的下标返回，
+            // 并令左窗口下标等于其+1, 并删除下标在i～d+1间的元素
+            if (map.containsKey(s.charAt(j))) {
+                int d = map.get(s.charAt(j));
+                for (int x = i; x <= d; x ++)
+                    map.remove(s.charAt(x));
+                i = d + 1;
+            } else {    // 如果不存在，则加入到HashMap中，并右窗口右移
+                map.put(s.charAt(j), j ++);
+                ans = Math.max(ans, j - i);
+            }
+            
+        }
+        return ans;
+    }    
+}
+
+
+
+
+=======================================================================================================================
+
+// Solution Four: Time complexity:O(n), Space complexity:O(n)
+// Sliding Window Optimized，对方法三的改进
+// 在方法三中存在需要循环遍历删除HashMap中元素的情况，增加了时间开销，但实际上可以避免此操作
+// 当右窗口下标移动到j时，若HashMap中无重复元素，则添加元素，并继续向右移动
+// 若存在重复元素，则取出HashMap中重复元素对应的下标tmp，并更新HashMap中该元素的index
+
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        int ans = 0, i = 0, j = 0;
+        int n = s.length();
+        while (i < n && j < n) {
+            if (map.containsKey(s.charAt(j))) {
+                // 注意要取最大值
+                i = Math.max(map.get(s.charAt(j)), i);
+            }
+            // 注意存入的value
+            map.put(s.charAt(j), j + 1);
+            ans = Math.max(ans, j - i + 1);
+            j ++;
+        }
+        return ans;
+    }    
+}
