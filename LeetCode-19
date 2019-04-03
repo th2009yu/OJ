@@ -1,0 +1,68 @@
+[Medium]
+19. Remove Nth Node From End of List
+
+Given a linked list, remove the n-th node from the end of list and return its head.
+
+Example:
+
+Given linked list: 1->2->3->4->5, and n = 2.
+
+After removing the second node from the end, the linked list becomes 1->2->3->5.
+Note:
+
+Given n will always be valid.
+
+Follow up:
+
+Could you do this in one pass?
+
+
+===================================
+
+// Solution One: 
+// 要删除倒数第n个节点，就要找到倒数第n-1个节点
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        if (head == null)   return null;
+        int len = 0, count = 1;
+        ListNode curr  = head;
+        // 得到链表的长度
+        while(curr != null) {
+            len ++;
+            curr = curr.next;
+        }
+        if (len < n)   return null;
+        if (len == 1) return null;
+        if (len == 2 && n == 1) {
+            head.next = null;
+            return head;
+        }
+        if (len == n)
+            return head.next;
+        ListNode pre = head;
+        
+        // 找到要删除的节点的前一个节点
+        while (count != (len - n)) {
+            pre = pre.next;
+            count ++;
+        }
+        // 删除节点
+        pre.next = pre.next.next;
+        return head;
+    }
+}
+
+
+// 虽然最后AC了，但前面被各种边界条件愚弄，错了7次。感觉受到了侮辱，透！
+
+
+=======================
