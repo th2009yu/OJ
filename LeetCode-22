@@ -1,0 +1,82 @@
+[Medium]
+22. Generate Parentheses
+
+Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.
+
+For example, given n = 3, a solution set is:
+
+[
+  "((()))",
+  "(()())",
+  "(())()",
+  "()(())",
+  "()()()"
+]
+
+
+============================
+
+// Solution One:
+// Brute Force
+
+
+class Solution {
+    public List<String> generateParenthesis(int n) {
+        List<String> res = new ArrayList<>();
+        generateAll(new char[2 * n], 0, res);
+        return res;
+    }
+    public void generateAll(char[] c, int pos, List<String> res) {
+        if (pos == c.length) {
+            if (valid(c))
+                res.add(new String(c));
+        } else {
+            c[pos] = '(';
+            generateAll(c, pos+1, res);
+            c[pos] = ')';
+            generateAll(c, pos+1, res);
+        }
+    }
+    public boolean valid(char[] c) {
+        int balance = 0;
+        for (char i: c) {
+            if (i == '(')   balance ++;
+            else    balance --;
+            if (balance < 0)    return false;
+        }
+        return balance == 0;
+    }
+}
+
+
+
+=========================================
+
+// Solution One:
+// BackTracking
+// 对方法一进行优化，不再无脑加左右括号再判断组合是否合法
+// 而是先行判断，只有组合合法的情况下才继续递归。我们可以追踪目前为止左右括号的个数来实现。
+// 我们可以从左括号开始（如果我们仍存在左括号），然后我们可以在字符串中加入右括号（如果个数没有超过左括号的个数）
+
+
+class Solution {
+    public List<String> generateParenthesis(int n) {
+        List<String> result = new ArrayList<String>();
+        if (n > 0)
+            helper(result, "", 0, 0, n);
+        return result;
+    }
+    public void helper(List<String> res, String combination, int open, int close, int max) {
+        // 如果当前字符串已到最长长度
+        if (combination.length() == max * 2) {
+            res.add(combination);
+            return;
+        }
+        // 如果仍有左括号
+        if (open < max)
+            helper(res, combination + "(", open + 1, close, max);
+        // 如果右括号比左括号多
+        if (close < open) 
+            helper(res, combination + ")", open, close + 1, max);
+    }
+}
