@@ -1,0 +1,83 @@
+[hard]
+51. N-Queens
+
+Given an integer n, return all distinct solutions to the n-queens puzzle.
+
+Each solution contains a distinct board configuration of the n-queens' placement, 
+where 'Q' and '.' both indicate a queen and an empty space respectively.
+
+Example:
+
+Input: 4
+Output: [
+ [".Q..",  // Solution 1
+  "...Q",
+  "Q...",
+  "..Q."],
+
+ ["..Q.",  // Solution 2
+  "Q...",
+  "...Q",
+  ".Q.."]
+]
+Explanation: There exist two distinct solutions to the 4-queens puzzle as shown above.
+
+
+
+=============================
+// Solution One: backtracking
+// in the solution above, the Q's are put column by column, so you just check the left part of this board.
+// like:
+// for(int i=0; i<board.length; i++) {
+// for(int j=0; j<y; j++) {
+// to check if there is a Q on the left side in function validate()
+// then you check if there's a Q, the location u are about to put a Q (x,y) could be available, so it becomes:
+// (x-i==y-j | x==i | x-i==j-y)
+// the location can't on the east/ southeast/ northeast of Q
+// also, a plus is more effective than a minus
+// so it becomes:
+// (x+j == y+i || x==i || x+y==i+j)
+
+class Solution {
+    public List<List<String>> solveNQueens(int n) {
+        List<List<String>> result = new ArrayList<>();
+        char[][] board = new char[n][n];
+        for(int i = 0; i < n; i++)
+            for(int j = 0; j < n; j++)
+                board[i][j] = '.';
+        helper(board, 0, result);
+        return result;
+    }
+    public void helper(char[][] board, int row, List<List<String>> result) {
+        if (row == board.length) {
+            result.add(draw(board));
+            return;
+        }
+        for (int i = 0; i < board.length; i ++) {
+            if(isVaild(board, i, row)) {
+                board[i][row] = 'Q';
+                helper(board, row + 1, result);
+                board[i][row] = '.';
+            }
+        }
+    }
+    public boolean isVaild(char[][] board, int x, int y) {
+        for (int i = 0; i < board.length; i ++) {
+            for (int j = 0; j < y; j ++) {
+                // (x + j == y + i || x + y == i + j || x == i) determine whether (x,y) is around (i, j)
+                //  check left top x-i=y-j and to check left bottom i-x=y-j which can be modified to x+j=y+i and x+y=i+j
+                if(board[i][j] == 'Q' && (x + j == y + i || x + y == i + j || x == i))
+                    return false;
+            }
+        }
+        return true;
+    }
+    private List<String> draw(char[][] board) {
+        List<String> res = new LinkedList<String>();
+        for(int i = 0; i < board.length; i++) {
+            String s = new String(board[i]);
+            res.add(s);
+        }
+        return res;
+    }
+}
