@@ -1,0 +1,64 @@
+[hard]
+52. N-Queens II
+
+The n-queens puzzle is the problem of placing n queens on an n×n chessboard such that no two queens attack each other.
+
+Given an integer n, return the number of distinct solutions to the n-queens puzzle.
+
+Example:
+
+Input: 4
+Output: 2
+Explanation: There are two distinct solutions to the 4-queens puzzle as shown below.
+[
+ [".Q..",  // Solution 1
+  "...Q",
+  "Q...",
+  "..Q."],
+
+ ["..Q.",  // Solution 2
+  "Q...",
+  "...Q",
+  ".Q.."]
+]
+
+
+=======================================
+
+// Solution One: BackTracking
+// 和上一题一样，只不过这次不需要返回所有结果，只需要返回有多少个解就可以。
+// 我们直接把上道题的 ans 的 size 返回就可以了，此外 currentQueen.size ( ) == n 的时候，也不用去生成一个解了，直接加一个数字占位。
+
+class Solution {
+    public int totalNQueens(int n) {
+        List<Integer> result = new ArrayList<>();
+        List<Integer> temp = new ArrayList<>();
+        helper(result, temp, n);
+        return result.size();
+    }
+    public void helper(List<Integer> result, List<Integer> temp, int n) {
+        if (temp.size() == n) {
+            result.add(1);
+            return;
+        }
+        for (int col = 0; col < n; col ++) {
+            if (!temp.contains(col)) {
+                if (isDiagonalAttack(temp, col)) 
+                    continue;
+                temp.add(col);
+                helper(result, temp, n);
+                temp.remove(temp.size() - 1);
+            }
+        }
+    }
+    private boolean isDiagonalAttack(List<Integer> currentQueen, int i) {
+        int current_row = currentQueen.size();
+        int current_col = i;
+        for (int row = 0; row < currentQueen.size(); row++) {
+            if (Math.abs(current_row - row) == Math.abs(current_col - currentQueen.get(row))) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
