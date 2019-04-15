@@ -1,0 +1,66 @@
+[Medium]
+209. Minimum Size Subarray Sum
+
+Given an array of n positive integers and a positive integer s, 
+find the minimal length of a contiguous subarray of which the sum ≥ s. 
+If there isn't one, return 0 instead.
+
+Example: 
+
+Input: s = 7, nums = [2,3,1,2,4,3]
+Output: 2
+Explanation: the subarray [4,3] has the minimal length under the problem constraint.
+Follow up:
+If you have figured out the O(n) solution, try coding another solution of which the time complexity is O(n log n). 
+
+
+
+========================================
+// Two-Pointer, Time Complexity: O(n)
+
+class Solution {
+    public int minSubArrayLen(int s, int[] nums) {
+        int left = 0, sum = 0, min = Integer.MAX_VALUE;
+        for (int i = 0; i < nums.length; i ++) {
+            sum += nums[i];
+            while (sum >= s) {
+                min = Math.min(min, i - left + 1);
+                sum -= nums[left ++];
+            }
+        }
+        return min == Integer.MAX_VALUE ? 0 : min;
+    }
+}
+
+
+
+=========================================
+// binary-search
+
+class Solution {
+    public int minSubArrayLen(int s, int[] nums) {
+        int[] sums = new int[nums.length + 1];
+        // sums[0] = 0, sums[1] = nums[0], sum[2] = nums[0] + nums[1] ....
+        for (int i = 1; i < sums.length; i ++) {
+            sums[i] = sums[i - 1] + nums[i - 1];
+            System.out.println(sums[i]);
+        }
+        int min = Integer.MAX_VALUE;
+        for (int i = 0; i < sums.length; i ++) {
+            int end = binarySearch(i + 1, sums.length - 1, sums[i] + s, sums);
+            if (end == sums.length) break;
+            if (end - i < min) min = end - i;
+        }
+        return min == Integer.MAX_VALUE ? 0 : min;
+    }
+    public int binarySearch(int l, int h, int key, int[] sums) {
+        while (l <= h) {
+            int mid = (l + h) / 2;
+            if (sums[mid] >= key) 
+                h = mid - 1;
+            else
+                l = mid + 1;
+        }
+        return l;
+    }
+}
