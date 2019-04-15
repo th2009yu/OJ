@@ -1,0 +1,89 @@
+[Medium]
+151. Reverse Words in a String
+
+Given an input string, reverse the string word by word.
+
+ 
+
+Example 1:
+
+Input: "the sky is blue"
+Output: "blue is sky the"
+Example 2:
+
+Input: "  hello world!  "
+Output: "world! hello"
+Explanation: Your reversed string should not contain leading or trailing spaces.
+Example 3:
+
+Input: "a good   example"
+Output: "example good a"
+Explanation: You need to reduce multiple spaces between two words to a single space in the reversed string.
+ 
+
+Note:
+
+A word is defined as a sequence of non-space characters.
+Input string may contain leading or trailing spaces. However, your reversed string should not contain leading or trailing spaces.
+You need to reduce multiple spaces between two words to a single space in the reversed string.
+ 
+
+Follow up:
+
+For C programmers, try to solve it in-place in O(1) extra space.
+
+
+
+
+
+========================================
+
+// 需要处理以下问题：
+// 1. 处理空格
+// 2. 反转word的顺序
+
+class Solution {
+    public String reverseWords(String s) {
+        if (s.length() == 0)    return "";
+        StringBuilder result = new StringBuilder();
+        int i = s.length() - 1;
+        // 去除字符串尾部的空格
+        while(i >= 0 && s.charAt(i) == ' ')   i --;
+        if (i < 0)  return "";
+        while (i >= 0){
+            StringBuilder tmp = new StringBuilder();
+            // 将字符串存入
+            while (i >= 0 && s.charAt(i) != ' ') {
+                tmp.append(s.charAt(i --));
+            }
+            tmp.reverse();
+            System.out.println(tmp);
+            tmp.append(" ");
+            result.append(tmp);
+            i --;
+            while(i >= 0 && s.charAt(i) == ' ')   i --;
+        }
+        if (result.charAt(result.length() - 1) == ' ')
+            return result.substring(0, result.length() - 1).toString();
+        return result.toString();
+    }
+}
+
+
+
+==========================================
+// Amazing solution!
+
+class Solution {
+    public String reverseWords(String s) {
+        String[] words = s.trim().split(" +");
+        Collections.reverse(Arrays.asList(words));
+        return String.join(" ", words);
+    }
+}
+
+
+==========================================
+
+
+
