@@ -1,0 +1,48 @@
+题目描述
+给一个链表，若其中包含环，请找出该链表的环的入口结点，否则，输出null。
+
+=================
+/*
+ public class ListNode {
+    int val;
+    ListNode next = null;
+
+    ListNode(int val) {
+        this.val = val;
+    }
+}
+*/
+public class Solution {
+    public ListNode EntryNodeOfLoop(ListNode pHead){
+        if (pHead == null) {
+            return null;
+        }
+        ListNode slow = pHead, fast = pHead;
+        while (fast != null) {
+            slow = slow.next;
+            if (fast == null || fast.next == null) {
+                return null;
+            }
+            fast = fast.next.next;
+            if (slow == fast) {
+                break;
+            }
+        }
+        int numberOfRing = 1;
+        ListNode temp = slow.next;
+        while (temp != slow) {
+            numberOfRing ++;
+            temp = temp.next;
+        }
+        slow = pHead;
+        fast = pHead;
+        for (int i = 0; i < numberOfRing; i ++) {
+            fast = fast.next;
+        }
+        while (slow != fast) {
+            slow = slow.next;
+            fast = fast.next;
+        }
+        return slow;
+    }
+}
