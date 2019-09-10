@@ -1,0 +1,59 @@
+题目描述
+输入一个矩阵，按照从外向里以顺时针的顺序依次打印出每一个数字，例如，如果输入如下4 X 4矩阵： 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 则依次打印出数字1,2,3,4,8,12,16,15,14,13,9,5,6,7,11,10.
+
+
+===================
+import java.util.ArrayList;
+public class Solution {
+    public ArrayList<Integer> result = new ArrayList<>();
+    public ArrayList<Integer> printMatrix(int [][] matrix) {
+        if (matrix.length == 0) {
+            return result;
+        }
+        int n = matrix.length, m = matrix[0].length;
+        int start = 0;
+        while (n > start * 2 && m > start * 2) {
+            printMatrixInCircle(matrix, n, m, start);
+            start ++;
+        }
+        return result;
+    }
+    private void printMatrixInCircle(int[][] matrix, int n, int m, int start) {
+        int endX = m - start - 1;
+        int endY = n - start - 1;
+        left2Right(matrix, start, endX, endY);
+        Up2Down(matrix, start, endX, endY);
+        Right2Left(matrix, start, endX, endY);
+        Down2Up(matrix, start, endX, endY);
+    }
+
+    private void left2Right(int[][] matrix, int start, int endX, int endY) {
+        for (int k = start; k <= endX; k ++) {
+            result.add(matrix[start][k]);
+        }
+    }
+    private void Up2Down(int[][] matrix, int start, int endX, int endY) {
+        // 至少需要两行：终止行号大于起始行号
+        if (start < endY) {
+            for (int k = start + 1; k <= endY; k ++) {
+                result.add(matrix[k][endX]);
+            }
+        }
+    }
+    private void Right2Left(int[][] matrix, int start, int endX, int endY) {
+        // 至少需要两行两列：终止行号大于起始行号 && 终止列号大于起始列号
+        if (start < endX && start < endY) {
+            for (int k = endX - 1; k >= start; k --) {
+                result.add(matrix[endY][k]);
+            }
+        }
+    }
+    private void Down2Up(int[][] matrix, int start, int endX, int endY) {
+        // 至少需要三行两列：
+        if (start < endX && start < endY - 1) {
+            for (int k = endY - 1; k >= start + 1; k --) {
+                result.add(matrix[k][start]);
+            }
+        }
+    }
+}
