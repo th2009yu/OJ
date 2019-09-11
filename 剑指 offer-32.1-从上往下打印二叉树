@@ -1,0 +1,47 @@
+题目描述
+从上到下按层打印二叉树，同一层结点从左至右输出。每一层输出一行。
+
+
+=====================
+import java.util.*;
+
+
+/*
+public class TreeNode {
+    int val = 0;
+    TreeNode left = null;
+    TreeNode right = null;
+
+    public TreeNode(int val) {
+        this.val = val;
+
+    }
+
+}
+*/
+public class Solution {
+    ArrayList<ArrayList<Integer> > Print(TreeNode root) {
+        ArrayList<ArrayList<Integer>> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            ArrayList<Integer> subResult = new ArrayList<>();
+            int size = queue.size();
+            for (int i = 0; i < size; i ++) {
+                TreeNode node = queue.poll();
+                subResult.add(node.val);
+                if (node.left != null) {
+                    queue.offer(node.left);
+                }
+                if (node.right != null) {
+                    queue.offer(node.right);
+                }
+            }
+            result.add(subResult);
+        }
+        return result;
+    }
+}
