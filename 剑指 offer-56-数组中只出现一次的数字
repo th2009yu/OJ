@@ -1,0 +1,73 @@
+题目描述
+一个整型数组里除了两个数字之外，其他的数字都出现了两次。请写程序找出这两个只出现一次的数字。
+
+
+========================
+Time complexity: O(n)
+Space complexity: O(n)
+
+import java.util.*;
+//num1,num2分别为长度为1的数组。传出参数
+//将num1[0],num2[0]设置为返回结果
+public class Solution {
+    public void FindNumsAppearOnce(int [] array,int num1[] , int num2[]) {
+        Map<Integer,Integer> map = new HashMap<>();
+        for (int num: array) {
+            if (!map.containsKey(num)) {
+                map.put(num, 1);
+            } else {
+                map.put(num, map.get(num) + 1);
+            }
+        }
+        int[] res = new int[2];
+        int index = 0;
+        for (Map.Entry<Integer, Integer> entry: map.entrySet()) {
+            if (entry.getValue() == 1) {
+                res[index ++] = entry.getKey();
+            }
+        }
+        num1[0] = res[0];
+        num2[0] = res[1];
+    }
+}
+
+
+
+========================
+Time complexity: O(n)
+Space complexity: O(1)
+
+//num1,num2分别为长度为1的数组。传出参数
+//将num1[0],num2[0]设置为返回结果
+public class Solution {
+    public void FindNumsAppearOnce(int [] array,int num1[] , int num2[]) {
+        if (array.length == 2) {
+            num1[0] = array[0];
+            num2[0] = array[1];
+        }
+        int bitResult = 0;
+        for (int i = 0; i < array.length; i ++) {
+            bitResult ^= array[i];
+        }
+        int index = findFirst(bitResult);
+        for (int i = 0; i < array.length; i ++) {
+            if (isBitOne(array[i], index)) {
+                num1[0] ^= array[i];
+            } else {
+                num2[0] ^= array[i];
+            }
+        }
+    }
+    private int findFirst(int bitResult) {
+        int index = 0;
+        while ((bitResult & 1) == 0 && index < 32) {
+            bitResult >>= 1;
+            index ++;
+        }
+        return index;
+    }
+    private boolean isBitOne(int num, int index) {
+        return ((num >> index) & 1) == 1;
+    }
+}
+
