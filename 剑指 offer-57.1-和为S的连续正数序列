@@ -20,7 +20,7 @@ public class Solution {
                 }
                 result.add(temp);
                 left ++;
-                right ++;
+                right = left + 1;
             } else if (sumOfArr(left, right) < sum) {
                 right ++;
             } else {
@@ -37,9 +37,3 @@ public class Solution {
         return sum;
     }
 }
-// public class Main {
-//     public static void main(String[] args) {
-//         Solution s = new Solution();
-//         s.FindContinuousSequence(3);
-//     }
-// }
