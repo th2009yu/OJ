@@ -60,3 +60,36 @@ class Solution {
         
     }
 }
+
+
+
+
+==============================================================================================================
+
+
+
+
+import java.util.*;
+
+class Solution {
+    String[] map = new String[] {"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+    List<String> result = new ArrayList<>();
+    public List<String> letterCombinations(String digits) {
+        if (digits.length() > 0) {
+            helper(digits, "");
+        }
+        return result;
+    }
+    private void helper(String next_digits, String subResult) {
+        if (next_digits.length() == 0) {
+            result.add(subResult);
+        } else {
+            String letters = map[next_digits.charAt(0) - '0'];
+            for (int i = 0; i < letters.length(); i ++) {
+                helper(next_digits.substring(1), subResult + letters.charAt(i));
+            }
+        }
+    }
+}
+
+
