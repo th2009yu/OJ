@@ -1,0 +1,189 @@
+[hard]
+23. Merge k Sorted Lists
+
+Merge k sorted linked lists and return it as one sorted list. Analyze and describe its complexity.
+
+Example:
+
+Input:
+[
+  1->4->5,
+  1->3->4,
+  2->6
+]
+Output: 1->1->2->3->4->4->5->6
+
+
+=============================================
+// Brute Force
+// Time complexity : O(Nlog N)    where N is the total number of nodes.
+// Collecting all the values costs O(N)time.
+// A stable sorting algorithm costs O(NlogN) time.
+// Iterating for creating the linked list costs O(N) time.
+
+// Space complexity : O(N).
+// Sorting cost O(N) space (depends on the algorithm you choose).
+// Creating a new linked list costs O(N) space.
+
+class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        if (lists.length == 0) {
+            return null;
+        }
+        ListNode root = new ListNode(0);
+        ListNode curr = root;
+        List<Integer> list =  new ArrayList<>();
+        for (ListNode p : lists) {
+            while (p != null) {
+                list.add(p.val);
+                p = p.next;
+            }
+        }
+        Collections.sort(list);
+        for (int val: list) {
+            ListNode temp = new ListNode(val);
+            curr.next = temp;
+            curr = curr.next;
+        }
+        return root.next;
+    }
+}
+
+=============================================
+// 利用PriorityQueue实现
+// Time complexity : O(Nlogk)   where k is the number of linked lists.
+// The comparison cost will be reduced to O(logk) for every pop and insertion to priority queue. 
+// But finding the node with the smallest value just costs O(1) time.
+// There are N nodes in the final linked list.
+
+// Space complexity : O(n) Creating a new linked list costs O(n) space.
+// O(k)The code above present applies in-place method which cost O(1) space. 
+// And the priority queue (often implemented with heaps) costs O(k) space (it's far less than N in most situations).
+
+class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        if (lists.length == 0) {
+            return null;
+        }
+        ListNode root = new ListNode(0);
+        ListNode curr = root;
+        PriorityQueue<ListNode> queue = new PriorityQueue<>((o1, o2) -> o1.val - o2.val);
+        for (ListNode p: lists) {
+            if (p != null) {
+                queue.offer(p);
+            }
+        }
+        while (!queue.isEmpty()) {
+            ListNode node = queue.poll();
+            curr.next = node;
+            curr = curr.next;
+            node = node.next;
+            if (node != null) {
+                queue.offer(node);
+            }
+        }
+        return root.next;
+    }
+}
+
+===============================================
+// 将问题转换成mergeTwoLists 执行(k - 1)次。
+// Time Complexity: O(kN) where k is the number of linked lists.
+// Space Complexity: O(1)
+
+class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        if (lists.length == 0) {
+            return null;
+        }
+        if (lists.length == 1) {
+            return lists[0];
+        }
+        ListNode head = mergeTwoLists(lists[0], lists[1]);
+        for (int i = 2; i < lists.length; i ++) {
+            head = mergeTwoLists(head, lists[i]);
+        }
+        return head;
+    }
+    private ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        if (l1 == null) {
+            return l2;
+        }
+        if (l2 == null) {
+            return l1;
+        }
+        ListNode root = new ListNode(0);
+        ListNode curr = root;
+        while (l1 != null && l2 != null) {
+            if (l1.val < l2.val) {
+                curr.next = l1;
+                l1 = l1.next;
+            } else {
+                curr.next = l2;
+                l2 = l2.next;
+            }
+            curr = curr.next;
+        }
+        if (l1 != null) {
+            curr.next = l1;
+        }
+        if (l2 != null) {
+            curr.next = l2;
+        }
+        return root.next;
+    }
+}
+
+
+===============================================
+// Merge with Divide And Conquer
+// Time Complexity: O(Nlogk)
+// Space Complexity: O(1)
+
+
+class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        if (lists.length == 0) {
+            return null;
+        }
+        if (lists.length == 1) {
+            return lists[0];
+        }
+        int interval = 1;
+        while (interval < lists.length) {
+            for (int i = 0; i + interval < lists.length; i += interval * 2) {
+                lists[i] = mergeTwoLists(lists[i], lists[i + interval]);
+            }
+            interval *= 2;
+        }
+        return lists[0];
+    }
+    private ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        if (l1 == null) {
+            return l2;
+        }
+        if (l2 == null) {
+            return l1;
+        }
+        ListNode root = new ListNode(0);
+        ListNode curr = root;
+        while (l1 != null && l2 != null) {
+            if (l1.val < l2.val) {
+                curr.next = l1;
+                l1 = l1.next;
+            } else {
+                curr.next = l2;
+                l2 = l2.next;
+            }
+            curr = curr.next;
+        }
+        if (l1 != null) {
+            curr.next = l1;
+        }
+        if (l2 != null) {
+            curr.next = l2;
+        }
+        return root.next;
+    }
+}
+
