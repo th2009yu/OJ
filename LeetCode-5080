@@ -1,0 +1,68 @@
+5080. Two Sum BSTs
+
+Given two binary search trees, return True if and only if there is a node in the first tree and a node in the second tree whose values sum up to a given integer target.
+
+ 
+
+Example 1:
+
+
+
+Input: root1 = [2,1,4], root2 = [1,0,3], target = 5
+Output: true
+Explanation: 2 and 3 sum up to 5.
+Example 2:
+
+
+
+Input: root1 = [0,-10,10], root2 = [5,1,7,0,2], target = 18
+Output: false
+ 
+
+Constraints:
+
+Each tree has at most 5000 nodes.
+-10^9 <= target, node.val <= 10^9
+
+
+=============================
+class Solution {
+    private List<Integer> list1 = new ArrayList<>();
+    private List<Integer> list2 = new ArrayList<>();
+    public boolean twoSumBSTs(TreeNode root1, TreeNode root2, int target) {
+
+        change2Array1(root1);
+        change2Array2(root2);
+        Integer[] arr1 = list1.toArray(new Integer[list1.size()]);
+        Integer[] arr2 = list2.toArray(new Integer[list2.size()]);
+        int i = 0, j = arr2.length - 1;
+        while (i < arr1.length && j >= 0) {
+            int sum = arr1[i] + arr2[j];
+            if (sum == target) {
+                return true;
+            } else if (sum < target) {
+                i ++;
+            } else {
+                j --;
+            }
+        }
+        return false;
+    }
+    private void change2Array1(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        change2Array1(root.left);
+        list1.add(root.val);
+        change2Array1(root.right);
+    }
+    private void change2Array2(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        change2Array2(root.left);
+        list2.add(root.val);
+        change2Array2(root.right);
+    }
+
+}
