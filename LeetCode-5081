@@ -1,0 +1,51 @@
+5081. Stepping Numbers
+
+A Stepping Number is an integer such that all of its adjacent digits have an absolute difference of exactly 1. For example, 321 is a Stepping Number while 421 is not.
+
+Given two integers low and high, find and return a sorted list of all the Stepping Numbers in the range [low, high] inclusive.
+
+ 
+
+Example 1:
+
+Input: low = 0, high = 21
+Output: [0,1,2,3,4,5,6,7,8,9,10,12,21]
+ 
+
+Constraints:
+
+0 <= low <= high <= 2 * 10^9
+
+
+================================
+class Solution {
+    private List<Integer> res = new ArrayList<>();
+    public List<Integer> countSteppingNumbers(int low, int high) {
+        for (int i = 0; i < 10; i ++) {
+            helper(i, low, high);
+        }
+        Collections.sort(res);
+        return res;
+    }
+    private void helper(long num, int low, int high) {
+        if (num >= low && num <= high) {
+            res.add((int)num);
+        }
+        if (num == 0 || num > high) {
+            return;
+        }
+
+        int last = (int)num % 10;
+        long next_1 = num * 10 + last + 1;
+        long next_2 = num * 10 + last - 1;
+
+        if (last == 0) {
+            helper(next_1, low, high);
+        } else if (last == 9) {
+            helper(next_2, low, high);
+        } else {
+            helper(next_1, low, high);
+            helper(next_2, low, high);
+        }
+    }
+}
