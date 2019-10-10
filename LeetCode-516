@@ -78,8 +78,36 @@ class Solution {
 
 
 ===============================
-// optimization above solution
-// space complexity spend only use O(n) 
+// optimize the above solution
+// space complexity: O(n)
+// We can reduce the space complexity to O(n), by noticing that dp[i][j] only depends on the current row dp[i][j-1], 
+// and the row below it (dp[i+1][j-1] and dp[i+1][j]). So instead of storing an entire 2-D array of data, a 1-D array of data will be enough. Mentioning this will score bonus points in an interview.
+// Coding it is tricky. Now, from dp[j], to get the value:
+// dp[i+1][j] is "down". It becomesdp[j]
+// dp[i][j-1] is "left". It becomes dp[j-1]
+// dp[i+1][j-1] is "down-left". It becomes dp[j-1] before we overwrite it, 
+// so we preserve that value across iterations of the inner for loop. This is done using 2 variables: pre and tmp (see code below)
+
+class Solution {
+    public int longestPalindromeSubseq(String str) {
+        int[] dp = new int[str.length()];
+        for (int i = str.length() - 1; i >= 0; i--) {
+            dp[i] = 1;
+            int pre = 0;
+            for (int j = i + 1; j < str.length(); j++) {
+                int tmp = dp[j];
+                if (str.charAt(i) == str.charAt(j)) {
+                    dp[j] = 2 + pre;
+                } else {
+                    dp[j] = Math.max(dp[j], dp[j - 1]);
+                }
+                pre = tmp;
+            }
+        }
+        return dp[str.length() - 1];
+    }
+}
+
 
 
 
