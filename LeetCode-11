@@ -15,7 +15,7 @@ Output: 49
 
 ==================================================================================================
 
-// Solution One: Time complexity:O(n^2), Space complexity:O(1)
+// Solution One: Time complexity:O(n), Space complexity:O(1)
 // Brute force
 
 class Solution {
