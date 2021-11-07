@@ -34,7 +34,6 @@ Each element nums[i] will be an integer in the range [-1000, 1000].
  
  
  =====================================
- // this solution better
  class Solution {
     public int pivotIndex(int[] nums) {
         int total = 0, sum = 0;
@@ -52,13 +51,17 @@ Each element nums[i] will be an integer in the range [-1000, 1000].
 =====================================
 class Solution {
     public int pivotIndex(int[] nums) {
-        for (int pivot = 0; pivot < nums.length; pivot ++) {
-            int leftSum = 0, rightSum = 0;
-            for (int i = 0; i < pivot; i ++)    leftSum += nums[i];
-            for (int j = pivot + 1; j < nums.length; j ++)  rightSum += nums[j];
-            if (leftSum == rightSum)
-                return pivot;
+        int leftSum = 0, rightSum = 0;
+        for (int item: nums) {
+            rightSum += item;
         }
+        
+        for (int i = 0; i < nums.length; i ++) {
+            if (leftSum == rightSum - leftSum - nums[i]) {
+                return i;
+            }
+            leftSum += nums[i];
+        }                   
         return -1;
     }
 }
